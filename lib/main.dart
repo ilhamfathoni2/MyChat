@@ -89,13 +89,7 @@ class ContactList extends StatelessWidget {
       itemCount: contacts.length,
       itemBuilder: (context, index) {
         Contact contact = contacts[index];
-        return index == contacts.length - 1
-            ? Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 120), // Atur margin atau padding sesuai kebutuhan
-                child: ContactCard(contact: contact),
-              )
-            : ContactCard(contact: contact);
+        return ContactCard(contact: contact);
       },
     );
   }
