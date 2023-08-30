@@ -69,6 +69,7 @@ class MyApp extends StatelessWidget {
           slivers: [
             SliverAppBar(
               elevation: 0,
+              backgroundColor: kPrimaryColor,
               expandedHeight: 60,
               pinned: true,
               flexibleSpace: Container(
@@ -76,7 +77,7 @@ class MyApp extends StatelessWidget {
                 margin: const EdgeInsets.only(left: 15, right: 15),
                 alignment: Alignment.centerLeft,
                 child: Text('My Chat',
-                    style: blackTextStyle.copyWith(
+                    style: lightTextStyle.copyWith(
                         fontSize: 25, fontWeight: semiBold)),
               ),
             ),
