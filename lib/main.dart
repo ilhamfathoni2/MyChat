@@ -65,69 +65,70 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Contact List',
       home: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              elevation: 0,
-              backgroundColor: kPrimaryColor,
-              expandedHeight: 60,
-              pinned: true,
-              flexibleSpace: Container(
-                width: 152,
-                margin: const EdgeInsets.only(left: 15, right: 15),
-                alignment: Alignment.centerLeft,
-                child: Text('My Chat',
-                    style: lightTextStyle.copyWith(
-                        fontSize: 25, fontWeight: semiBold)),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.only(
-                  bottom: 140), // Atur jarak ke bawah sebesar 100px
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    Contact contact = contacts[index];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      elevation: 0,
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: SizedBox(
-                        height: 80,
-                        child: Center(
-                          child: ListTile(
-                            title: Text(contact.name,
-                                style: blackTextStyle.copyWith(
-                                    fontSize: 16, fontWeight: semiBold)),
-                            subtitle: Text(contact.shortMessage,
-                                style: blackTextStyle.copyWith(
-                                    fontSize: 12, fontWeight: reguler)),
-                            trailing: Text(contact.time,
-                                style: blackTextStyle.copyWith(
-                                    fontSize: 12, fontWeight: light)),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatRoomScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  childCount: contacts.length,
-                ),
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          title: Text('My Chat',
+              style: lightTextStyle.copyWith(fontWeight: semiBold)),
+          elevation: 0,
+          backgroundColor: kPrimaryColor,
         ),
+        body: ContactList(contacts: contacts),
         bottomSheet: const MenuBottomSheet(),
+      ),
+    );
+  }
+}
+
+class ContactList extends StatelessWidget {
+  final List<Contact> contacts;
+
+  const ContactList({super.key, required this.contacts});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: contacts.length,
+      itemBuilder: (context, index) {
+        Contact contact = contacts[index];
+        return index == contacts.length - 1
+            ? Padding(
+                padding: const EdgeInsets.only(
+                    bottom: 120), // Atur margin atau padding sesuai kebutuhan
+                child: ContactCard(contact: contact),
+              )
+            : ContactCard(contact: contact);
+      },
+    );
+  }
+}
+
+class ContactCard extends StatelessWidget {
+  final Contact contact;
+
+  const ContactCard({super.key, required this.contact});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 0,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: ListTile(
+        title: Text(contact.name,
+            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: semiBold)),
+        subtitle: Text(contact.shortMessage,
+            style: blackTextStyle.copyWith(fontSize: 12, fontWeight: reguler)),
+        trailing: Text(contact.time,
+            style: blackTextStyle.copyWith(fontSize: 12, fontWeight: light)),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatRoomScreen(),
+            ),
+          );
+        },
       ),
     );
   }
@@ -138,47 +139,42 @@ class MenuBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        height: 100,
-        padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 14),
-        decoration: BoxDecoration(
-          color: kWhiteColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
+    return Container(
+      height: 100,
+      padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 14),
+      decoration: BoxDecoration(
+        color: kWhiteColor,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: kBlackColor.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -3),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: kBlackColor.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            BottomSheetMenuItem(
-              icon: Icons.chat,
-              text: 'Chat',
-              backgroundColor: kBlueColor,
-            ),
-            BottomSheetMenuItem(
-              icon: Icons.access_time,
-              text: 'Status',
-              backgroundColor: kOrangeColor,
-            ),
-            BottomSheetMenuItem(
-              icon: Icons.group,
-              text: 'Group',
-              backgroundColor: kSoftRedColor,
-            ),
-          ],
-        ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          BottomSheetMenuItem(
+            icon: Icons.chat,
+            text: 'Chat',
+            backgroundColor: kBlueColor,
+          ),
+          BottomSheetMenuItem(
+            icon: Icons.access_time,
+            text: 'Status',
+            backgroundColor: kOrangeColor,
+          ),
+          BottomSheetMenuItem(
+            icon: Icons.group,
+            text: 'Group',
+            backgroundColor: kSoftRedColor,
+          ),
+        ],
       ),
     );
   }
