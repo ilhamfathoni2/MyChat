@@ -69,7 +69,6 @@ class MyApp extends StatelessWidget {
           slivers: [
             SliverAppBar(
               elevation: 0,
-              backgroundColor: kBgDefaultFlutterColor,
               expandedHeight: 60,
               pinned: true,
               flexibleSpace: Container(
