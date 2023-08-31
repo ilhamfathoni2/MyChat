@@ -103,26 +103,30 @@ class ContactCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
       elevation: 0,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ListTile(
-        title: Text(contact.name,
-            style: blackTextStyle.copyWith(fontSize: 16, fontWeight: semiBold)),
-        subtitle: Text(contact.shortMessage,
-            style: blackTextStyle.copyWith(fontSize: 12, fontWeight: reguler)),
-        trailing: Text(contact.time,
-            style: blackTextStyle.copyWith(fontSize: 12, fontWeight: light)),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatRoomScreen(),
-            ),
-          );
-        },
+      child: Container(
+        decoration: BoxDecoration(
+            color: kWhiteColor, borderRadius: BorderRadius.circular(20)),
+        padding: const EdgeInsets.all(10),
+        child: ListTile(
+          title: Text(contact.name,
+              style:
+                  blackTextStyle.copyWith(fontSize: 16, fontWeight: semiBold)),
+          subtitle: Text(contact.shortMessage,
+              style:
+                  blackTextStyle.copyWith(fontSize: 12, fontWeight: reguler)),
+          trailing: Text(contact.time,
+              style: blackTextStyle.copyWith(fontSize: 12, fontWeight: light)),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatRoomScreen(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
