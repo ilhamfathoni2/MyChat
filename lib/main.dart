@@ -108,7 +108,7 @@ class ContactCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
         decoration: BoxDecoration(
-            color: kWhiteColor, borderRadius: BorderRadius.circular(20)),
+            color: kWhiteColor, borderRadius: BorderRadius.circular(30)),
         padding: const EdgeInsets.all(10),
         child: ListTile(
           leading: Container(
