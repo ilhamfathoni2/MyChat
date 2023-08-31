@@ -1,80 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:learn_flutter/src/bloc/contact_state.dart';
 
 import 'src/models/contact.dart';
 import 'src/shared/theme.dart';
 import 'src/screens/chat_room.dart';
+import 'src/bloc/contacts_bloc.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final List<Contact> contacts = [
-    Contact(
-        name: 'Acel Abdullah',
-        shortMessage: 'When we will meet?',
-        time: '09.30',
-        image: 'assets/img/profilew1.png'),
-    Contact(
-        name: 'Aqil',
-        shortMessage: 'Are you still working?',
-        time: '10.30',
-        image: 'assets/img/profilem2.png'),
-    Contact(
-        name: 'Ambar',
-        shortMessage: 'I am hungry, let’s go!!!!',
-        time: '07.00',
-        image: 'assets/img/profilem1.png'),
-    Contact(
-        name: 'Rizki',
-        shortMessage: 'When we will meet?',
-        time: '12.30',
-        image: 'assets/img/profilem2.png'),
-    Contact(
-        name: 'Fachri',
-        shortMessage: 'I am hungry, let’s go!!!!',
-        time: '14.00',
-        image: 'assets/img/profilem1.png'),
-    Contact(
-        name: 'Farhan',
-        shortMessage: 'Are you still working?',
-        time: '17.20',
-        image: 'assets/img/profilem2.png'),
-    Contact(
-        name: 'Fahmi',
-        shortMessage: 'When we will meet?',
-        time: '19.00',
-        image: 'assets/img/profilem1.png'),
-    Contact(
-        name: 'Bujang',
-        shortMessage: 'I am hungry, let’s go!!!!',
-        time: '08.30',
-        image: 'assets/img/profilem2.png'),
-    Contact(
-        name: 'Ujang',
-        shortMessage: 'Are you still working?',
-        time: '16.00',
-        image: 'assets/img/profilem1.png'),
-  ];
-
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Contact List',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('My Chat',
-              style: lightTextStyle.copyWith(fontWeight: semiBold)),
-          elevation: 0,
-          backgroundColor: kPrimaryColor,
-        ),
-        backgroundColor: kBgColor,
-        body: ContactList(contacts: contacts),
-        bottomSheet: const MenuBottomSheet(),
+      home: BlocProvider(
+        // Gunakan BlocProvider untuk menyediakan ContactCubit ke widget tree
+        create: (context) => ContactCubit(), // Inisialisasi ContactCubit
+        child: const HomeScreen(),
       ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final contactCubit =
+        context.read<ContactCubit>(); // Ambil instance dari ContactCubit
+
+    contactCubit.fetchContacts();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My Chat',
+            style: lightTextStyle.copyWith(fontWeight: semiBold)),
+        elevation: 0,
+        backgroundColor: kPrimaryColor,
+      ),
+      backgroundColor: kBgColor,
+      body: BlocBuilder<ContactCubit, ContactState>(
+        // Gunakan BlocBuilder untuk mengakses state ContactCubit
+        builder: (context, state) {
+          if (state is ContactLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is ContactLoaded) {
+            final contacts = state.contacts;
+            return ContactList(contacts: contacts);
+          } else if (state is ContactError) {
+            return Center(child: Text(state.message));
+          }
+          return Container(); // Tambahkan kondisi lain jika diperlukan
+        },
+      ),
+      bottomSheet: const MenuBottomSheet(),
     );
   }
 }
@@ -127,12 +113,16 @@ class ContactCard extends StatelessWidget {
                 ),
           ),
           title: Text(contact.name,
+              maxLines: 1, // Maksimal 1 baris
+              overflow: TextOverflow.ellipsis,
               style:
                   blackTextStyle.copyWith(fontSize: 16, fontWeight: semiBold)),
           subtitle: Text(contact.shortMessage,
+              maxLines: 1, // Maksimal 1 baris
+              overflow: TextOverflow.ellipsis,
               style:
                   blackTextStyle.copyWith(fontSize: 12, fontWeight: reguler)),
-          trailing: Text(contact.time,
+          trailing: Text(contact.time.substring(11, 16),
               style: blackTextStyle.copyWith(fontSize: 12, fontWeight: light)),
           onTap: () {
             Navigator.push(
