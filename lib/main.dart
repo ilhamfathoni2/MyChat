@@ -110,6 +110,23 @@ class ContactCard extends StatelessWidget {
             color: kWhiteColor, borderRadius: BorderRadius.circular(20)),
         padding: const EdgeInsets.all(10),
         child: ListTile(
+          leading: Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: kPrimaryColor,
+                  width: 2.0,
+                )),
+            child: CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.transparent,
+              foregroundColor: kPrimaryColor,
+              child: const Icon(
+                Icons.account_circle_rounded,
+              ),
+            ),
+          ),
           title: Text(contact.name,
               style:
                   blackTextStyle.copyWith(fontSize: 16, fontWeight: semiBold)),
