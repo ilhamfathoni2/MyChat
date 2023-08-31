@@ -9,7 +9,7 @@ Color kGreySoftColor = const Color(0xffF1F1F1);
 Color kGreyColor = const Color(0xff929196);
 Color kWhiteColor = const Color(0xffFFFFFF);
 Color kBlackColor = const Color(0xff070A17);
-Color kBgDefaultFlutterColor = const Color(0xffFAFAFA);
+Color kBgColor = const Color(0xffF1F1F1);
 
 TextStyle blackTextStyle = GoogleFonts.poppins(
   color: kBlackColor,

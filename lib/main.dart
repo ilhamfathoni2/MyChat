@@ -71,6 +71,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
           backgroundColor: kPrimaryColor,
         ),
+        backgroundColor: kBgColor,
         body: ContactList(contacts: contacts),
         bottomSheet: const MenuBottomSheet(),
       ),
