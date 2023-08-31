@@ -120,11 +120,11 @@ class ContactCard extends StatelessWidget {
                   width: 2.0,
                 )),
             child: CircleAvatar(
-              radius: 24,
-              backgroundColor: Colors.transparent,
-              foregroundColor: kPrimaryColor,
-              backgroundImage: AssetImage(contact.image),
-            ),
+                radius: 24,
+                backgroundColor: kPrimaryColor,
+                child: Image.asset(contact.image)
+                // backgroundImage: AssetImage(contact.image),
+                ),
           ),
           title: Text(contact.name,
               style:
