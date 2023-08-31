@@ -138,8 +138,11 @@ class ContactCard extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => ChatRoomScreen(),
+              PageRouteBuilder(
+                transitionDuration: Duration.zero,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return ChatRoomScreen();
+                },
               ),
             );
           },

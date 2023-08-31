@@ -33,7 +33,11 @@ class ChatRoomScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: kPrimaryColor, title: const Text('Chat Room')),
+        title: Text('Chat Room',
+            style: lightTextStyle.copyWith(fontWeight: semiBold)),
+        elevation: 0,
+        backgroundColor: kPrimaryColor,
+      ),
       body: Column(
         children: [
           Expanded(
