@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/src/repository/contact_repository.dart';
 
 import '/src/models/message.dart';
 import '/src/shared/theme.dart';
 
-class ChatRoomScreen extends StatelessWidget {
-  final List<Message> messages = [
-    Message(sender: 'Acel', time: '2:30 PM', text: 'Hello, how are you?'),
-    Message(
-        sender: 'Jennie Blackpink',
-        time: '2:32 PM',
-        text: 'I\'m good, thanks!'),
-    Message(sender: 'Aslam', time: '2:34 PM', text: 'Iyaak'),
-    Message(sender: 'Acel', time: '2:40 PM', text: 'Please use English'),
-    Message(
-        sender: 'Jennie Blackpink',
-        time: '2:32 PM',
-        text: 'What are you talking about'),
-  ];
+class ChatRoomScreen extends StatefulWidget {
+  final String id;
 
-  // List warna untuk sender
+  const ChatRoomScreen({Key? key, required this.id}) : super(key: key);
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _ChatRoomScreenState createState() => _ChatRoomScreenState();
+}
+
+class _ChatRoomScreenState extends State<ChatRoomScreen> {
+  late Future<Message?> _messageFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _messageFuture = ContactRepository().fetchMessageById(widget.id);
+  }
+
   final List<Color> senderColors = [
     kPrimaryColor,
     kBlueColor,
     kOrangeColor,
     kSoftRedColor,
-    // Tambahkan warna lainnya sesuai kebutuhan
   ];
-
-  ChatRoomScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,26 +39,42 @@ class ChatRoomScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: kPrimaryColor,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              reverse: true,
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                Message message = messages[index];
-                Color senderColor = senderColors[index % senderColors.length];
-                return ChatBubble(
-                  sender: message.sender,
-                  time: message.time,
-                  text: message.text,
-                  senderColor: senderColor,
-                );
-              },
-            ),
-          ),
-          const InputField(),
-        ],
+      body: FutureBuilder<Message?>(
+        future: _messageFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final message = snapshot.data;
+            if (message == null) {
+              return const Center(child: Text('No message available.'));
+            } else {
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      reverse: true,
+                      itemCount: 1,
+                      itemBuilder: (context, index) {
+                        Color senderColor =
+                            senderColors[index % senderColors.length];
+                        return ChatBubble(
+                          sender: message.name,
+                          time: message.time,
+                          text: message.shortMessage,
+                          senderColor: senderColor,
+                        );
+                      },
+                    ),
+                  ),
+                  const InputField(),
+                ],
+              );
+            }
+          }
+        },
       ),
     );
   }
@@ -70,12 +87,12 @@ class ChatBubble extends StatelessWidget {
   final Color senderColor;
 
   const ChatBubble({
-    super.key,
+    Key? key,
     required this.sender,
     required this.time,
     required this.text,
     required this.senderColor,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +111,7 @@ class ChatBubble extends StatelessWidget {
             Text(sender,
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: kWhiteColor)),
-            Text(time,
+            Text(time.substring(11, 16),
                 style:
                     lightTextStyle.copyWith(fontSize: 10, fontWeight: light)),
             Text(text, style: TextStyle(color: kWhiteColor)),
@@ -106,7 +123,7 @@ class ChatBubble extends StatelessWidget {
 }
 
 class InputField extends StatelessWidget {
-  const InputField({super.key});
+  const InputField({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
           } else if (state is ContactError) {
             return Center(child: Text(state.message));
           }
-          return Container(); // Tambahkan kondisi lain jika diperlukan
+          return Container();
         },
       ),
       bottomSheet: const MenuBottomSheet(),
@@ -130,7 +130,9 @@ class ContactCard extends StatelessWidget {
               PageRouteBuilder(
                 transitionDuration: Duration.zero,
                 pageBuilder: (context, animation, secondaryAnimation) {
-                  return ChatRoomScreen();
+                  return ChatRoomScreen(
+                    id: contact.id,
+                  );
                 },
               ),
             );
