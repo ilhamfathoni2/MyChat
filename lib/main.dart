@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_flutter/src/bloc/contact_state.dart';
+import 'package:learn_flutter/src/screens/send_message.dart';
 
 import 'src/models/contact.dart';
 import 'src/shared/theme.dart';
@@ -28,16 +29,24 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final contactCubit = context.read<ContactCubit>();
+    contactCubit.fetchContacts();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final contactCubit =
-        context.read<ContactCubit>(); // Ambil instance dari ContactCubit
-
-    contactCubit.fetchContacts();
-
     return Scaffold(
       appBar: AppBar(
         title: Text('My Chat',
@@ -47,7 +56,6 @@ class HomeScreen extends StatelessWidget {
       ),
       backgroundColor: kBgColor,
       body: BlocBuilder<ContactCubit, ContactState>(
-        // Gunakan BlocBuilder untuk mengakses state ContactCubit
         builder: (context, state) {
           if (state is ContactLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -72,12 +80,19 @@ class ContactList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: contacts.length,
-      itemBuilder: (context, index) {
-        Contact contact = contacts[index];
-        return ContactCard(contact: contact);
+    return RefreshIndicator(
+      onRefresh: () async {
+        final contactCubit = context.read<ContactCubit>();
+        contactCubit.fetchContacts();
       },
+      child: ListView.builder(
+        itemCount: contacts.length,
+        padding: const EdgeInsets.only(bottom: 150, top: 20),
+        itemBuilder: (context, index) {
+          Contact contact = contacts[index];
+          return ContactCard(contact: contact);
+        },
+      ),
     );
   }
 }
@@ -172,11 +187,33 @@ class MenuBottomSheet extends StatelessWidget {
             icon: Icons.chat,
             text: 'Chat',
             backgroundColor: kBlueColor,
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: Duration.zero,
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const MyApp();
+                  },
+                ),
+              );
+            },
           ),
           BottomSheetMenuItem(
-            icon: Icons.access_time,
-            text: 'Status',
+            icon: Icons.send,
+            text: 'Send',
             backgroundColor: kOrangeColor,
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: Duration.zero,
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const SendMessageScreen();
+                  },
+                ),
+              );
+            },
           ),
           BottomSheetMenuItem(
             icon: Icons.group,
@@ -193,33 +230,38 @@ class BottomSheetMenuItem extends StatelessWidget {
   final IconData icon;
   final String text;
   final Color backgroundColor;
+  final Function()? onTap;
 
   const BottomSheetMenuItem({
     super.key,
     required this.icon,
     required this.text,
     required this.backgroundColor,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: backgroundColor,
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: backgroundColor,
+            ),
+            child: Icon(icon, color: kWhiteColor),
           ),
-          child: Icon(icon, color: kWhiteColor),
-        ),
-        const SizedBox(height: 5),
-        Text(
-          text,
-          style: inactiveTextStyle.copyWith(fontSize: 14, fontWeight: medium),
-        ),
-      ],
+          const SizedBox(height: 5),
+          Text(
+            text,
+            style: inactiveTextStyle.copyWith(fontSize: 14, fontWeight: medium),
+          ),
+        ],
+      ),
     );
   }
 }
