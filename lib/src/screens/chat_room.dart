@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/main.dart';
 import 'package:learn_flutter/src/repository/contact_repository.dart';
+import 'package:learn_flutter/src/repository/delete_message.dart';
 
 import '/src/models/message.dart';
 import '/src/shared/theme.dart';
@@ -65,6 +67,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                           time: message.time,
                           text: message.shortMessage,
                           senderColor: senderColor,
+                          messageId: message.id,
                         );
                       },
                     ),
@@ -85,6 +88,7 @@ class ChatBubble extends StatelessWidget {
   final String time;
   final String text;
   final Color senderColor;
+  final String messageId;
 
   const ChatBubble({
     Key? key,
@@ -92,7 +96,40 @@ class ChatBubble extends StatelessWidget {
     required this.time,
     required this.text,
     required this.senderColor,
+    required this.messageId,
   }) : super(key: key);
+
+  // fungsi delete message
+  void deleteMessage(BuildContext context, String messageId) {
+    final deleteMsgRepository = DeleteMessageRepository();
+    deleteMsgRepository.deleteMessage(messageId).then((success) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pesan berhasil dihapus.'),
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MyApp(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal menghapus pesan.'),
+          ),
+        );
+      }
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal menghapus pesan: $error'),
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +145,27 @@ class ChatBubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            PopupMenuButton(
+              color: kWhiteColor,
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: "edit",
+                  child: Text("Edit"),
+                ),
+                const PopupMenuItem(
+                  value: "delete",
+                  child: Text("Delete"),
+                ),
+              ],
+              onSelected: (value) {
+                if (value == "edit") {
+                  // Implementasi logika edit
+                } else if (value == "delete") {
+                  // Implementasi logika hapus
+                  deleteMessage(context, messageId);
+                }
+              },
+            ),
             Text(sender,
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: kWhiteColor)),
