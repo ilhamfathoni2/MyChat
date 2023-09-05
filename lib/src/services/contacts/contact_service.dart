@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:learn_flutter/src/models/contact.dart';
 import 'package:learn_flutter/src/models/message.dart';
-
-import '../models/contact.dart';
 
 class ContactRepository {
   final Dio _dio = Dio();

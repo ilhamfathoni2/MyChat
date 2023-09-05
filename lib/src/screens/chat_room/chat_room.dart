@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/main.dart';
-import 'package:learn_flutter/src/repository/contact_repository.dart';
-import 'package:learn_flutter/src/repository/delete_message.dart';
+import 'package:learn_flutter/src/services/contacts/contact_service.dart';
+import 'package:learn_flutter/src/utils/messages/delete_message.dart';
 
 import '/src/models/message.dart';
 import '/src/shared/theme.dart';
@@ -99,38 +98,6 @@ class ChatBubble extends StatelessWidget {
     required this.messageId,
   }) : super(key: key);
 
-  // fungsi delete message
-  void deleteMessage(BuildContext context, String messageId) {
-    final deleteMsgRepository = DeleteMessageRepository();
-    deleteMsgRepository.deleteMessage(messageId).then((success) {
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Pesan berhasil dihapus.'),
-          ),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MyApp(),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Gagal menghapus pesan.'),
-          ),
-        );
-      }
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal menghapus pesan: $error'),
-        ),
-      );
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -161,8 +128,8 @@ class ChatBubble extends StatelessWidget {
                 if (value == "edit") {
                   // Implementasi logika edit
                 } else if (value == "delete") {
-                  // Implementasi logika hapus
-                  deleteMessage(context, messageId);
+                  // logika hapus di utils
+                  MessageUtils.deleteMessage(context, messageId);
                 }
               },
             ),

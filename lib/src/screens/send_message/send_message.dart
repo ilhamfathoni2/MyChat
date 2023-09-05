@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/main.dart';
 import 'package:learn_flutter/src/models/send_message.dart';
-import 'package:learn_flutter/src/repository/send_repository.dart';
+import 'package:learn_flutter/src/services/messages/send_message.dart';
 import 'package:learn_flutter/src/shared/theme.dart';
 import 'package:intl/intl.dart';
 

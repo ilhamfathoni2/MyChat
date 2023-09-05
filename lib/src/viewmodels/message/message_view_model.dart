@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:learn_flutter/src/bloc/message_state.dart';
-import 'package:learn_flutter/src/repository/contact_repository.dart';
+import 'package:learn_flutter/src/services/contacts/contact_service.dart';
+import 'package:learn_flutter/src/viewmodels/message/message_state.dart';
 
 class MessageCubit extends Cubit<MessageState> {
   final ContactRepository _repository = ContactRepository();
@@ -17,7 +17,7 @@ class MessageCubit extends Cubit<MessageState> {
         emit(const MessageError('Message not found'));
       }
     } catch (error) {
-      emit(const MessageError('Failed to fetch message bloc'));
+      emit(const MessageError('Failed to fetch message (bloc)'));
     }
   }
 }

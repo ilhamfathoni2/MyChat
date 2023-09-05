@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:learn_flutter/src/bloc/contact_state.dart';
-import 'package:learn_flutter/src/repository/contact_repository.dart';
-import '/src/models/contact.dart';
+import 'package:learn_flutter/src/models/contact.dart';
+import 'package:learn_flutter/src/services/contacts/contact_service.dart';
+import 'package:learn_flutter/src/viewmodels/contact/contact_state.dart';
 
 class ContactCubit extends Cubit<ContactState> {
   final ContactRepository _repository = ContactRepository();
