@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/src/controller/messages/delete_message.dart';
 import 'package:learn_flutter/src/services/contacts/contact_service.dart';
-import 'package:learn_flutter/src/utils/messages/delete_message.dart';
 
 import '/src/models/message.dart';
 import '/src/shared/theme.dart';
@@ -129,7 +129,7 @@ class ChatBubble extends StatelessWidget {
                   // Implementasi logika edit
                 } else if (value == "delete") {
                   // logika hapus di utils
-                  MessageUtils.deleteMessage(context, messageId);
+                  MessageController.deleteMessage(context, messageId);
                 }
               },
             ),

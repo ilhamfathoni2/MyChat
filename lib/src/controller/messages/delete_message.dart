@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learn_flutter/main.dart';
 import 'package:learn_flutter/src/services/messages/delete.dart';
 
-class MessageUtils {
+class MessageController {
   static void deleteMessage(
     BuildContext context,
     String messageId,
