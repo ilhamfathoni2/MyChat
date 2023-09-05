@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/src/controller/messages/delete_message.dart';
+import 'package:learn_flutter/src/controller/messages/edit_message.dart';
 import 'package:learn_flutter/src/services/contacts/contact_service.dart';
 
 import '/src/models/message.dart';
@@ -126,10 +127,36 @@ class ChatBubble extends StatelessWidget {
               ],
               onSelected: (value) {
                 if (value == "edit") {
-                  // Implementasi logika edit
+                  // Membuka dialog pesan
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      String editedText = text;
+                      return AlertDialog(
+                        title: const Text("Edit Message"),
+                        content: TextField(
+                          onChanged: (value) {
+                            editedText = value;
+                          },
+                          controller: TextEditingController(text: text),
+                          decoration: const InputDecoration(
+                            hintText: "Edit your message...",
+                          ),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              UpdateMessageController.updateMessages(
+                                  context, messageId, editedText);
+                            },
+                            child: const Text("Save"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 } else if (value == "delete") {
-                  // logika hapus di utils
-                  MessageController.deleteMessage(context, messageId);
+                  DeleteMessageController.deleteMessage(context, messageId);
                 }
               },
             ),
