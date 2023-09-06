@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_flutter/src/viewmodels/contact/contact_state.dart';
 import 'package:learn_flutter/src/viewmodels/contact/contact_view_model.dart';
+import 'package:learn_flutter/src/viewmodels/message/message_view_model.dart';
 
 import 'src/shared/theme.dart';
 import 'src/widgets/contact_list.dart';
@@ -16,13 +17,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Contact List',
-      home: BlocProvider(
-        // Gunakan BlocProvider untuk menyediakan ContactCubit ke widget tree
-        create: (context) => ContactCubit(), // Inisialisasi ContactCubit
-        child: const HomeScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ContactCubit>(
+          create: (BuildContext context) => ContactCubit(),
+        ),
+        BlocProvider<MessageCubit>(
+          create: (BuildContext context) => MessageCubit(),
+        ),
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Contact List',
+        home: HomeScreen(),
       ),
     );
   }

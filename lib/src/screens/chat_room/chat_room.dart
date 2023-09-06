@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_flutter/src/controller/messages/delete_message.dart';
 import 'package:learn_flutter/src/controller/messages/edit_message.dart';
-import 'package:learn_flutter/src/services/contacts/contact_service.dart';
+import 'package:learn_flutter/src/viewmodels/message/message_state.dart';
+import 'package:learn_flutter/src/viewmodels/message/message_view_model.dart';
 
-import '/src/models/message.dart';
 import '/src/shared/theme.dart';
 
 class ChatRoomScreen extends StatefulWidget {
@@ -17,12 +18,11 @@ class ChatRoomScreen extends StatefulWidget {
 }
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
-  late Future<Message?> _messageFuture;
-
   @override
   void initState() {
     super.initState();
-    _messageFuture = ContactRepository().fetchMessageById(widget.id);
+    final messageCubit = context.read<MessageCubit>();
+    messageCubit.fetchMessageById(widget.id);
   }
 
   final List<Color> senderColors = [
@@ -41,41 +41,38 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         elevation: 0,
         backgroundColor: kPrimaryColor,
       ),
-      body: FutureBuilder<Message?>(
-        future: _messageFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      body: BlocBuilder<MessageCubit, MessageState>(
+        builder: (context, state) {
+          if (state is MessageLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            final message = snapshot.data;
-            if (message == null) {
-              return const Center(child: Text('No message available.'));
-            } else {
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      reverse: true,
-                      itemCount: 1,
-                      itemBuilder: (context, index) {
-                        Color senderColor =
-                            senderColors[index % senderColors.length];
-                        return ChatBubble(
-                          sender: message.name,
-                          time: message.time,
-                          text: message.shortMessage,
-                          senderColor: senderColor,
-                          messageId: message.id,
-                        );
-                      },
-                    ),
+          } else if (state is MessageLoaded) {
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    reverse: true,
+                    itemCount: 1,
+                    itemBuilder: (context, index) {
+                      var message = state.message;
+                      Color senderColor =
+                          senderColors[index % senderColors.length];
+                      return ChatBubble(
+                        sender: message.name,
+                        time: message.time,
+                        text: message.shortMessage,
+                        senderColor: senderColor,
+                        messageId: message.id,
+                      );
+                    },
                   ),
-                  const InputField(),
-                ],
-              );
-            }
+                ),
+                const InputField(),
+              ],
+            );
+          } else if (state is MessageError) {
+            return Center(child: Text('Error: ${state.errorMessage}'));
+          } else {
+            return const Center(child: Text('No message available.'));
           }
         },
       ),
