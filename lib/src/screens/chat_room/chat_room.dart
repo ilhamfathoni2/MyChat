@@ -13,8 +13,7 @@ class ChatRoomScreen extends StatefulWidget {
   const ChatRoomScreen({Key? key, required this.id}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ChatRoomScreenState createState() => _ChatRoomScreenState();
+  State<ChatRoomScreen> createState() => _ChatRoomScreenState();
 }
 
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
