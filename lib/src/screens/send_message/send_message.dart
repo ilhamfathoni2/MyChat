@@ -129,12 +129,10 @@ class _SendMessageScreenState extends State<SendMessageScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Send',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                    style: lightTextStyle.copyWith(
+                        fontSize: 16, fontWeight: medium),
                   ),
                   SizedBox(width: isSending ? 8 : 0),
                   if (isSending)
