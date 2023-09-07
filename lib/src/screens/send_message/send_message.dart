@@ -61,8 +61,29 @@ class _SendMessageScreenState extends State<SendMessageScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Send Message',
-            style: lightTextStyle.copyWith(fontWeight: semiBold)),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                transitionDuration: Duration.zero,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return const MyApp();
+                },
+              ),
+            );
+          },
+        ),
+        title: Center(
+          child: Text(
+            'Send Message',
+            style: lightTextStyle.copyWith(fontWeight: semiBold),
+          ),
+        ),
         elevation: 0,
         backgroundColor: kPrimaryColor,
       ),

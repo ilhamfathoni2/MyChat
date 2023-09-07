@@ -54,8 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Chat',
-            style: lightTextStyle.copyWith(fontWeight: semiBold)),
+        title: Center(
+          child: Text('My Chat',
+              style: lightTextStyle.copyWith(fontWeight: semiBold)),
+        ),
         elevation: 0,
         backgroundColor: kPrimaryColor,
       ),
