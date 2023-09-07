@@ -78,11 +78,9 @@ class _SendMessageScreenState extends State<SendMessageScreen> {
             );
           },
         ),
-        title: Center(
-          child: Text(
-            'Send Message',
-            style: lightTextStyle.copyWith(fontWeight: semiBold),
-          ),
+        title: Text(
+          'Send Message',
+          style: lightTextStyle.copyWith(fontWeight: semiBold),
         ),
         elevation: 0,
         backgroundColor: kPrimaryColor,

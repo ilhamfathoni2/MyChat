@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:learn_flutter/main.dart';
 import 'package:learn_flutter/src/controller/messages/delete_message.dart';
 import 'package:learn_flutter/src/controller/messages/edit_message.dart';
 import 'package:learn_flutter/src/viewmodels/message/message_state.dart';
@@ -35,6 +36,23 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              PageRouteBuilder(
+                transitionDuration: Duration.zero,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return const MyApp();
+                },
+              ),
+            );
+          },
+        ),
         title: Text('Chat Room',
             style: lightTextStyle.copyWith(fontWeight: semiBold)),
         elevation: 0,
